@@ -3,6 +3,7 @@ package com.horiaconstantin.kata.marsrover;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static com.horiaconstantin.kata.marsrover.Direction.WEST;
 import static com.horiaconstantin.kata.marsrover.RotationCommand.L;
 import static com.horiaconstantin.kata.marsrover.RotationCommand.R;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -56,7 +57,7 @@ class RoverTest {
 
     @Test
     public void testProcessDirectionCommandRight() {
-        Rover rovy = new Rover(4, 2, Direction.WEST);
+        Rover rovy = new Rover(4, 2, WEST);
 
         assertEquals("NORTH", rovy.processDirectionCommandRight());
         assertEquals("EAST", rovy.processDirectionCommandRight());
@@ -127,7 +128,7 @@ class RoverTest {
         assertEquals(4, rovy.getX());
         assertEquals(3, rovy.getY());
 
-        rovy = new Rover(0, 0, Direction.WEST);
+        rovy = new Rover(0, 0, WEST);
         rovy.processDirectionCommandForward();
         assertEquals(-1, rovy.getX());
         assertEquals(0, rovy.getY());
@@ -154,5 +155,59 @@ class RoverTest {
         assertEquals(8, rovy.getY());
     }
 
+    @Test
+    public void testProcessDirectionCommandBackward() {
+        Rover rovy = new Rover(4, 2, Direction.EAST);
+
+        rovy.processDirectionCommandBackward();
+        assertEquals(3, rovy.getX());
+        assertEquals(2, rovy.getY());
+
+        rovy.processDirectionCommandBackward();
+        assertEquals(2, rovy.getX());
+        assertEquals(2, rovy.getY());
+
+        rovy = new Rover(4, 2, Direction.NORTH);
+        rovy.processDirectionCommandBackward();
+        assertEquals(4, rovy.getX());
+        assertEquals(1, rovy.getY());
+
+        rovy = new Rover(0, 0, WEST);
+        rovy.processDirectionCommandBackward();
+        assertEquals(1, rovy.getX());
+        assertEquals(0, rovy.getY());
+
+        rovy = new Rover(-1111, -5, Direction.SOUTH);
+        rovy.processDirectionCommandBackward();
+        assertEquals(-1111, rovy.getX());
+        assertEquals(-4, rovy.getY());
+    }
+
+    @Test
+    public void testMoveBackward() {
+        rovy.singleCommand("B");
+
+        assertEquals(4, rovy.getX());
+        assertEquals(1, rovy.getY());
+    }
+
+    @Test
+    public void testProcessSingleCommandBackward() {
+        rovy.move("BB");
+
+        assertEquals(4, rovy.getX());
+        assertEquals(0, rovy.getY());
+    }
+
+    @Test
+    public void moveWithAllAvailableCommands() {
+        Rover rovy = new Rover(0, 0, Direction.NORTH);
+
+        rovy.move("FLFFFRFLB");
+
+        assertEquals(-2, rovy.getX());
+        assertEquals(2, rovy.getY());
+        assertEquals("WEST", rovy.getDirection());
+    }
 
 }

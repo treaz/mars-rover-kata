@@ -85,7 +85,7 @@ public class Rover {
             RotationCommand rotationCommand = RotationCommand.valueOf(commandString);
             processDirectionCommand(rotationCommand);
         } else if (commandString.matches(MOVEMENT_COMMANDS)) {
-            processDirectionCommandForward();
+            processMovementCommand(MovementCommand.valueOf(commandString));
         } else {
             throw new IllegalCommandInSequence(String.format("Command '%s' is invalid. " +
                     "Please consult manual for correct values.", commandString));
@@ -136,8 +136,23 @@ public class Rover {
         return y;
     }
 
+    String processMovementCommand(@NotNull MovementCommand movementCommand) {
+        Objects.requireNonNull(movementCommand);
+        switch (movementCommand) {
+            case F:
+                processDirectionCommandForward();
+                break;
+            case B:
+                processDirectionCommandBackward();
+                break;
+            default:
+                throw new RuntimeException("Unknown movementCommand");
+        }
+        return getDirection();
+    }
+
     //    TODO add a check of integeroverflow for x and y
-    public void processDirectionCommandForward() {
+    void processDirectionCommandForward() {
         switch (direction) {
             case EAST:
                 x++;
@@ -154,4 +169,20 @@ public class Rover {
         }
     }
 
+    void processDirectionCommandBackward() {
+        switch (direction) {
+            case EAST:
+                x--;
+                break;
+            case NORTH:
+                y--;
+                break;
+            case WEST:
+                x++;
+                break;
+            case SOUTH:
+                y++;
+                break;
+        }
+    }
 }

@@ -33,7 +33,7 @@ class RoverTest {
 
     @Test
     public void testConstructorWithInvalidDirection() {
-        assertThrows(IllegalArgumentException.class, () -> new Rover(4, 2, null));
+        assertThrows(IllegalArgumentException.class, () -> new Rover(4, 2, (Direction) null));
     }
 
     @Test
@@ -203,11 +203,11 @@ class RoverTest {
     public void moveWithAllAvailableCommands() {
         Rover rovy = new Rover(0, 0, Direction.NORTH);
 
-        rovy.move("FLFFFRFLB");
-
+        assertEquals("(-2, 2) WEST", rovy.move("FLFFFRFLB"));
         assertEquals(-2, rovy.getX());
         assertEquals(2, rovy.getY());
         assertEquals("WEST", rovy.getDirection());
+
     }
 
     @Test

@@ -31,6 +31,17 @@ public class Rover {
         this.y = y;
     }
 
+    public Rover(int x, int y, String directionString) {
+        try {
+            this.direction = Direction.valueOf(directionString);
+            this.x = x;
+            this.y = y;
+        } catch (IllegalArgumentException ex) {
+            throw new IllegalArgumentException(String.format("Direction '%s' invalid." +
+                    "Consult manual for a valid direction string", directionString));
+        }
+    }
+
 
     public String getDirection() {
         return direction.name();
@@ -71,7 +82,7 @@ public class Rover {
     }
 
     private String printLocation() {
-        return String.format("(4, 2) %s", direction);
+        return String.format("(%s, %s) %s", x, y, direction);
     }
 
     String singleCommand(String commandString) {
@@ -198,5 +209,11 @@ public class Rover {
                     "Stopping executing command sequence.", integer));
         }
         return integer - 1;
+    }
+
+
+    public static void main(String[] args) {
+        Rover rover = new Rover(Integer.parseInt(args[0]), Integer.parseInt(args[1]), args[2]);
+        System.out.println(rover.move(args[3]));
     }
 }

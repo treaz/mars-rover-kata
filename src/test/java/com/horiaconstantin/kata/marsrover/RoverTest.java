@@ -20,7 +20,6 @@ class RoverTest {
 
     @Test
     public void testConstructor() {
-//        todo nulls and other strange values?
         assertNotNull(rovy);
     }
 
@@ -102,5 +101,42 @@ class RoverTest {
         assertEquals("(4, 2) NORTH", rovy.move(""));
         assertEquals("(4, 2) EAST", rovy.move("LLL"));
     }
+
+    @Test
+    public void testCoords() {
+        Rover rovy = new Rover(5, -3, Direction.EAST);
+
+        assertEquals(5, rovy.getX());
+        assertEquals(-3, rovy.getY());
+    }
+
+    @Test
+    public void testProcessDirectionCommandForward() {
+        Rover rovy = new Rover(4, 2, Direction.EAST);
+
+        rovy.processDirectionCommandForward();
+        assertEquals(5, rovy.getX());
+        assertEquals(2, rovy.getY());
+
+        rovy.processDirectionCommandForward();
+        assertEquals(6, rovy.getX());
+        assertEquals(2, rovy.getY());
+
+        rovy = new Rover(4, 2, Direction.NORTH);
+        rovy.processDirectionCommandForward();
+        assertEquals(4, rovy.getX());
+        assertEquals(3, rovy.getY());
+
+        rovy = new Rover(0, 0, Direction.WEST);
+        rovy.processDirectionCommandForward();
+        assertEquals(-1, rovy.getX());
+        assertEquals(0, rovy.getY());
+
+        rovy = new Rover(-1111, -5, Direction.SOUTH);
+        rovy.processDirectionCommandForward();
+        assertEquals(-1111, rovy.getX());
+        assertEquals(-6, rovy.getY());
+    }
+
 
 }

@@ -18,12 +18,16 @@ public class Rover {
     private static final Logger LOG = LoggerFactory.getLogger(Rover.class);
 
     private Direction direction;
+    private int x;
+    private int y;
 
-    public Rover(int i, int i1, Direction direction) {
+    public Rover(int x, int y, Direction direction) {
         if (direction == null) {
             throw new IllegalArgumentException("Direction must be specified at init time.");
         }
         this.direction = direction;
+        this.x = x;
+        this.y = y;
     }
 
 
@@ -67,7 +71,6 @@ public class Rover {
         for (String singleCommand : singleCommands) {
             singleCommand(singleCommand);
         }
-//        TODO move should return something reabalbe
         return printLocation();
     }
 
@@ -124,6 +127,32 @@ public class Rover {
                 throw new RuntimeException("Unknown direction");
         }
         return getDirection();
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    //    TODO add a check of integeroverflow for x and y
+    public void processDirectionCommandForward() {
+        switch (direction) {
+            case EAST:
+                x++;
+                break;
+            case NORTH:
+                y++;
+                break;
+            case WEST:
+                x--;
+                break;
+            case SOUTH:
+                y--;
+                break;
+        }
     }
 
 }

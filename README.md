@@ -1,5 +1,7 @@
 # mars-rover-kata
 
+A java implementation of the [Mars rover Kata](https://kata-log.rocks/mars-rover-kata) without wrapping at edges and obstacle detection.
+
 ## Running the code locally
 
 ### Prerequisites

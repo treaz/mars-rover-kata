@@ -14,7 +14,6 @@ import static com.horiaconstantin.kata.marsrover.Direction.WEST;
 
 public class Rover {
 
-    public static final String ALLOWS_COMMANDS = "[FBLR]*";
     private static final Logger LOG = LoggerFactory.getLogger(Rover.class);
     private static final String ROTATION_COMMANDS = "[LR]*";
     private static final String MOVEMENT_COMMANDS = "[FB]*";
@@ -87,7 +86,7 @@ public class Rover {
         } else if (commandString.matches(MOVEMENT_COMMANDS)) {
             processMovementCommand(MovementCommand.valueOf(commandString));
         } else {
-            throw new IllegalCommandInSequence(String.format("Command '%s' is invalid. " +
+            throw new IllegalCommandException(String.format("Command '%s' is invalid. " +
                     "Please consult manual for correct values.", commandString));
         }
         return printLocation();
@@ -151,20 +150,19 @@ public class Rover {
         return getDirection();
     }
 
-    //    TODO add a check of integeroverflow for x and y
     void processDirectionCommandForward() {
         switch (direction) {
             case EAST:
-                x++;
+                x = incrementIntProtected(x);
                 break;
             case NORTH:
-                y++;
+                y = incrementIntProtected(y);
                 break;
             case WEST:
-                x--;
+                x = decrementIntProtected(x);
                 break;
             case SOUTH:
-                y--;
+                y = decrementIntProtected(y);
                 break;
         }
     }
@@ -172,17 +170,33 @@ public class Rover {
     void processDirectionCommandBackward() {
         switch (direction) {
             case EAST:
-                x--;
+                x = decrementIntProtected(x);
                 break;
             case NORTH:
-                y--;
+                y = decrementIntProtected(y);
                 break;
             case WEST:
-                x++;
+                x = incrementIntProtected(x);
                 break;
             case SOUTH:
-                y++;
+                y = incrementIntProtected(y);
                 break;
         }
+    }
+
+    private int incrementIntProtected(int integer) {
+        if (integer == Integer.MAX_VALUE) {
+            throw new MovementException(String.format("Incrementing '%s' would result in overflow. " +
+                    "Stopping executing command sequence.", integer));
+        }
+        return integer + 1;
+    }
+
+    private int decrementIntProtected(int integer) {
+        if (integer == Integer.MIN_VALUE) {
+            throw new MovementException(String.format("Incrementing '%s' would result in overflow. " +
+                    "Stopping executing command sequence.", integer));
+        }
+        return integer - 1;
     }
 }

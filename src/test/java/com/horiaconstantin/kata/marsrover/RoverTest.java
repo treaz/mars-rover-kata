@@ -73,7 +73,7 @@ class RoverTest {
         rovy.singleCommand(null);
         assertEquals("NORTH", rovy.getDirection());
 
-        assertThrows(IllegalCommandInSequence.class, () -> rovy.singleCommand("D"));
+        assertThrows(IllegalCommandException.class, () -> rovy.singleCommand("D"));
     }
 
     @Test
@@ -94,7 +94,7 @@ class RoverTest {
 
     @Test
     public void testMoveWithInvalidCommand() {
-        assertThrows(IllegalCommandInSequence.class, () -> rovy.move("LLSRRLLL"));
+        assertThrows(IllegalCommandException.class, () -> rovy.move("LLSRRLLL"));
     }
 
     @Test
@@ -208,6 +208,18 @@ class RoverTest {
         assertEquals(-2, rovy.getX());
         assertEquals(2, rovy.getY());
         assertEquals("WEST", rovy.getDirection());
+    }
+
+    @Test
+    public void moveOffGrid() {
+        Rover rovy = new Rover(Integer.MAX_VALUE, Integer.MIN_VALUE, Direction.EAST);
+
+        assertThrows(MovementException.class, () -> rovy.move("FFF"));
+
+        Rover rovy2 = new Rover(Integer.MAX_VALUE, Integer.MIN_VALUE, Direction.NORTH);
+
+        assertThrows(MovementException.class, () -> rovy2.move("B"));
+
     }
 
 }

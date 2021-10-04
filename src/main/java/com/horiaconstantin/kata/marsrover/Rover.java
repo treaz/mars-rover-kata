@@ -16,6 +16,8 @@ public class Rover {
 
     public static final String ALLOWS_COMMANDS = "[FBLR]*";
     private static final Logger LOG = LoggerFactory.getLogger(Rover.class);
+    private static final String ROTATION_COMMANDS = "[LR]*";
+    private static final String MOVEMENT_COMMANDS = "[FB]*";
 
     private Direction direction;
     private int x;
@@ -62,11 +64,6 @@ public class Rover {
      * @return current rover coordinates and heading
      */
     public String move(String multipleCommands) {
-        if (!multipleCommands.matches(ALLOWS_COMMANDS)) {
-            throw new IllegalCommandInSequence(String.format("Command sequence '%s' contains invalid commands. " +
-                    "Please consult manual for correct values.", multipleCommands));
-        }
-
         String[] singleCommands = multipleCommands.split("");
         for (String singleCommand : singleCommands) {
             singleCommand(singleCommand);
@@ -84,14 +81,16 @@ public class Rover {
             return printLocation();
         }
 
-        try {
+        if (commandString.matches(ROTATION_COMMANDS)) {
             RotationCommand rotationCommand = RotationCommand.valueOf(commandString);
             processDirectionCommand(rotationCommand);
-        } catch (IllegalArgumentException ex) {
-            throw new IllegalRotationCommand(String.format("Invalid rotation command '%s'. " +
-                    "Please consult manual for correct values", commandString));
+        } else if (commandString.matches(MOVEMENT_COMMANDS)) {
+            processDirectionCommandForward();
+        } else {
+            throw new IllegalCommandInSequence(String.format("Command '%s' is invalid. " +
+                    "Please consult manual for correct values.", commandString));
         }
-        return "";
+        return printLocation();
     }
 
     String processDirectionCommand(@NotNull RotationCommand rotate) {

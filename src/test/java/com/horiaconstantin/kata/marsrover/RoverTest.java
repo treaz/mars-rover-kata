@@ -72,7 +72,7 @@ class RoverTest {
         rovy.singleCommand(null);
         assertEquals("NORTH", rovy.getDirection());
 
-        assertThrows(IllegalRotationCommand.class, () -> rovy.singleCommand("D"));
+        assertThrows(IllegalCommandInSequence.class, () -> rovy.singleCommand("D"));
     }
 
     @Test
@@ -85,7 +85,7 @@ class RoverTest {
     }
 
     @Test
-    public void testMove() {
+    public void testMoveRotation() {
         rovy.move("LLRRLLL");
 
         assertEquals("EAST", rovy.getDirection());
@@ -136,6 +136,22 @@ class RoverTest {
         rovy.processDirectionCommandForward();
         assertEquals(-1111, rovy.getX());
         assertEquals(-6, rovy.getY());
+    }
+
+    @Test
+    public void testProcessSingleCommandForward() {
+        rovy.singleCommand("F");
+
+        assertEquals(4, rovy.getX());
+        assertEquals(3, rovy.getY());
+    }
+
+    @Test
+    public void testMoveForward() {
+        rovy.move("FFFFFF");
+
+        assertEquals(4, rovy.getX());
+        assertEquals(8, rovy.getY());
     }
 
 

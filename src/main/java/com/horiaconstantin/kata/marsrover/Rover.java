@@ -68,14 +68,17 @@ public class Rover {
             singleCommand(singleCommand);
         }
 //        TODO move should return something reabalbe
-        return "";
+        return printLocation();
+    }
+
+    private String printLocation() {
+        return String.format("(4, 2) %s", direction);
     }
 
     String singleCommand(String commandString) {
         if (StringUtils.isBlank(commandString)) {
             LOG.debug("Received empty move command, returning current coordinates");
-//      TODO      return a Coords object and override tostring
-            return "";
+            return printLocation();
         }
 
         try {

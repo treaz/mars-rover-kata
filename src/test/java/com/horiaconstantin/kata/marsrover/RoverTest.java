@@ -97,4 +97,10 @@ class RoverTest {
         assertThrows(IllegalCommandInSequence.class, () -> rovy.move("LLSRRLLL"));
     }
 
+    @Test
+    public void testMoveOutput() {
+        assertEquals("(4, 2) NORTH", rovy.move(""));
+        assertEquals("(4, 2) EAST", rovy.move("LLL"));
+    }
+
 }

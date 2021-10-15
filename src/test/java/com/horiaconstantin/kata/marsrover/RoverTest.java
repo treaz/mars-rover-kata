@@ -120,6 +120,14 @@ class RoverTest {
     }
 
     @Test
+    public void testProcessMovementCommand() {
+        boolean commandResult = rovy.processMovementCommand(MovementCommand.F);
+
+        assertTrue(commandResult);
+        assertEquals(3, rovy.getY());
+    }
+
+    @Test
     public void testProcessSingleCommandForward() {
         rovy.singleCommand("F");
 

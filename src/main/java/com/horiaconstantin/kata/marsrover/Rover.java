@@ -105,7 +105,7 @@ public class Rover {
         return y;
     }
 
-    private void processMovementCommand(@NotNull MovementCommand movementCommand) {
+    boolean processMovementCommand(@NotNull MovementCommand movementCommand) {
         Objects.requireNonNull(movementCommand);
         switch (movementCommand) {
             case F:
@@ -117,6 +117,7 @@ public class Rover {
             default:
                 throw new RuntimeException("Unknown movementCommand");
         }
+        return true;
     }
 
     void processDirectionCommandForward() {

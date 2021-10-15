@@ -9,6 +9,8 @@ import java.util.Objects;
 
 import static com.horiaconstantin.kata.marsrover.Direction.turnLeft;
 import static com.horiaconstantin.kata.marsrover.Direction.turnRight;
+import static java.lang.Math.addExact;
+import static java.lang.Math.subtractExact;
 
 public class Rover {
 
@@ -123,51 +125,43 @@ public class Rover {
     void processDirectionCommandForward() {
         switch (direction) {
             case EAST:
-                x = incrementIntProtected(x);
+                x = addOrSubtractOne(x, true);
                 break;
             case NORTH:
-                y = incrementIntProtected(y);
+                y = addOrSubtractOne(y, true);
                 break;
             case WEST:
-                x = decrementIntProtected(x);
+                x = addOrSubtractOne(x, false);
                 break;
             case SOUTH:
-                y = decrementIntProtected(y);
+                y = addOrSubtractOne(y, false);
                 break;
+        }
+    }
+
+    private int addOrSubtractOne(int value, boolean isAddition) {
+        try {
+            return isAddition ? addExact(value, 1) : subtractExact(value, 1);
+        } catch (ArithmeticException ex) {
+            throw new MovementException(ex.getMessage());
         }
     }
 
     void processDirectionCommandBackward() {
         switch (direction) {
             case EAST:
-                x = decrementIntProtected(x);
+                x = addOrSubtractOne(x, false);
                 break;
             case NORTH:
-                y = decrementIntProtected(y);
+                y = addOrSubtractOne(y, false);
                 break;
             case WEST:
-                x = incrementIntProtected(x);
+                x = addOrSubtractOne(x, true);
                 break;
             case SOUTH:
-                y = incrementIntProtected(y);
+                y = addOrSubtractOne(y, true);
                 break;
         }
-    }
-
-    private int incrementIntProtected(int integer) {
-        if (integer == Integer.MAX_VALUE) {
-            throw new MovementException(String.format("Incrementing '%s' would result in overflow. " +
-                    "Stopping executing command sequence.", integer));
-        }
-        return integer + 1;
-    }
-
-    private int decrementIntProtected(int integer) {
-        if (integer == Integer.MIN_VALUE) {
-            throw new MovementException(String.format("Incrementing '%s' would result in overflow. " +
-                    "Stopping executing command sequence.", integer));
-        }
-        return integer - 1;
     }
 
 

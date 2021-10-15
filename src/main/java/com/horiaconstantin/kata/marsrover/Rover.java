@@ -61,10 +61,13 @@ public class Rover {
         return String.format("(%s, %s) %s", x, y, direction);
     }
 
-    String singleCommand(String commandString) {
+    /**
+     * @return true if the rover moved, false otherwise
+     */
+    boolean singleCommand(String commandString) {
         if (StringUtils.isBlank(commandString)) {
             LOG.debug("Received empty move command, returning current coordinates");
-            return getLocationAsString();
+            return false;
         }
 
         if (commandString.matches(ROTATION_COMMANDS)) {
@@ -76,7 +79,7 @@ public class Rover {
             throw new IllegalCommandException(String.format("Command '%s' is invalid. " +
                     "Please consult manual for correct values.", commandString));
         }
-        return getLocationAsString();
+        return true;
     }
 
     String processDirectionCommand(@NotNull RotationCommand rotate) {
@@ -102,7 +105,7 @@ public class Rover {
         return y;
     }
 
-    String processMovementCommand(@NotNull MovementCommand movementCommand) {
+    private void processMovementCommand(@NotNull MovementCommand movementCommand) {
         Objects.requireNonNull(movementCommand);
         switch (movementCommand) {
             case F:
@@ -114,7 +117,6 @@ public class Rover {
             default:
                 throw new RuntimeException("Unknown movementCommand");
         }
-        return getDirection();
     }
 
     void processDirectionCommandForward() {

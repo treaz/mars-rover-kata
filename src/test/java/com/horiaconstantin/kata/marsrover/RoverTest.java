@@ -45,10 +45,12 @@ class RoverTest {
 
     @Test
     public void testSingleCommandEmptyOrNullOrInvalid() {
-        rovy.singleCommand("");
+        boolean singleCommand = rovy.singleCommand("");
+        assertFalse(singleCommand);
         assertEquals("NORTH", rovy.getDirection());
 
-        rovy.singleCommand(null);
+        singleCommand = rovy.singleCommand(null);
+        assertFalse(singleCommand);
         assertEquals("NORTH", rovy.getDirection());
 
         assertThrows(IllegalCommandException.class, () -> rovy.singleCommand("D"));

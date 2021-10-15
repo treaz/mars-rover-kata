@@ -7,10 +7,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
 
-import static com.horiaconstantin.kata.marsrover.Direction.EAST;
-import static com.horiaconstantin.kata.marsrover.Direction.NORTH;
-import static com.horiaconstantin.kata.marsrover.Direction.SOUTH;
-import static com.horiaconstantin.kata.marsrover.Direction.WEST;
+import static com.horiaconstantin.kata.marsrover.Direction.turnLeft;
+import static com.horiaconstantin.kata.marsrover.Direction.turnRight;
 
 public class Rover {
 
@@ -47,28 +45,6 @@ public class Rover {
         return direction.name();
     }
 
-    String processDirectionCommandLeft() {
-//       TODO it would be nicer to have a circular linked list here...
-        switch (direction) {
-            case EAST:
-                direction = NORTH;
-                break;
-            case NORTH:
-                direction = WEST;
-                break;
-            case WEST:
-                direction = SOUTH;
-                break;
-            case SOUTH:
-                direction = EAST;
-                break;
-            default:
-                throw new RuntimeException("Unknown direction");
-        }
-        return getDirection();
-    }
-
-
     /**
      * @param multipleCommands a sequences of movement commands for the rover. For example: FBLFRBB
      * @return current rover coordinates and heading
@@ -78,17 +54,17 @@ public class Rover {
         for (String singleCommand : singleCommands) {
             singleCommand(singleCommand);
         }
-        return printLocation();
+        return getLocationAsString();
     }
 
-    private String printLocation() {
+    private String getLocationAsString() {
         return String.format("(%s, %s) %s", x, y, direction);
     }
 
     String singleCommand(String commandString) {
         if (StringUtils.isBlank(commandString)) {
             LOG.debug("Received empty move command, returning current coordinates");
-            return printLocation();
+            return getLocationAsString();
         }
 
         if (commandString.matches(ROTATION_COMMANDS)) {
@@ -100,40 +76,20 @@ public class Rover {
             throw new IllegalCommandException(String.format("Command '%s' is invalid. " +
                     "Please consult manual for correct values.", commandString));
         }
-        return printLocation();
+        return getLocationAsString();
     }
 
     String processDirectionCommand(@NotNull RotationCommand rotate) {
         Objects.requireNonNull(rotate);
         switch (rotate) {
             case L:
-                processDirectionCommandLeft();
+                direction = turnLeft(direction);
                 break;
             case R:
-                processDirectionCommandRight();
+                direction = turnRight(direction);
                 break;
             default:
                 throw new RuntimeException("Unknown rotationCommand");
-        }
-        return getDirection();
-    }
-
-    String processDirectionCommandRight() {
-        switch (direction) {
-            case EAST:
-                direction = SOUTH;
-                break;
-            case NORTH:
-                direction = EAST;
-                break;
-            case WEST:
-                direction = NORTH;
-                break;
-            case SOUTH:
-                direction = WEST;
-                break;
-            default:
-                throw new RuntimeException("Unknown direction");
         }
         return getDirection();
     }
